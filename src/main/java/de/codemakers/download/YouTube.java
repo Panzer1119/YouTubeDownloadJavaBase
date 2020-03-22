@@ -17,6 +17,7 @@
 
 package de.codemakers.download;
 
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class YouTube {
@@ -61,5 +62,23 @@ public class YouTube {
      */
     public static final Pattern PATTERN_YOUTUBE_CHANNEL_URL = Pattern.compile(STRING_PATTERN_YOUTUBE_CHANNEL_URL);
     // //
+    
+    public static final String getIdFromYouTubeUrl(String url) {
+        return getIdFromYouTubeUrl(url, "");
+    }
+    
+    public static final String getIdFromYouTubeUrl(String url, String defaultValue) {
+        if (url == null || url.isEmpty()) {
+            return defaultValue;
+        }
+        final Matcher matcher = PATTERN_YOUTUBE_URL.matcher(url);
+        if (!matcher.matches()) {
+            return defaultValue;
+        }
+        if (matcher.group(1) == null || matcher.group(1).isEmpty()) {
+            return matcher.group(2);
+        }
+        return matcher.group(1);
+    }
     
 }
