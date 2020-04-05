@@ -27,12 +27,12 @@ public abstract class AbstractVideo<T extends AbstractVideo, S extends Source, P
     protected String title;
     protected long durationMillis;
     
-    public AbstractVideo(String videoId) {
-        this(videoId, null, null, -1);
+    public AbstractVideo(S source) {
+        this(source, null, null, -1);
     }
     
-    public AbstractVideo(String videoId, String uploaderId, String title, long durationMillis) {
-        super(videoId);
+    public AbstractVideo(S source, String uploaderId, String title, long durationMillis) {
+        super(source);
         this.uploaderId = uploaderId;
         this.title = title;
         this.durationMillis = durationMillis;
@@ -40,10 +40,6 @@ public abstract class AbstractVideo<T extends AbstractVideo, S extends Source, P
     
     public String getVideoId() {
         return getId();
-    }
-    
-    public T setVideoId(String videoId) {
-        return setId(videoId);
     }
     
     public String getUploaderId() {
@@ -87,7 +83,7 @@ public abstract class AbstractVideo<T extends AbstractVideo, S extends Source, P
     
     @Override
     public String toString() {
-        return "AbstractVideo{" + "uploaderId='" + uploaderId + '\'' + ", title='" + title + '\'' + ", durationMillis=" + durationMillis + ", id='" + id + '\'' + ", timestamp=" + timestamp + '}';
+        return "AbstractVideo{" + "uploaderId='" + uploaderId + '\'' + ", title='" + title + '\'' + ", durationMillis=" + durationMillis + ", source=" + source + ", timestamp=" + timestamp + '}';
     }
     
 }
