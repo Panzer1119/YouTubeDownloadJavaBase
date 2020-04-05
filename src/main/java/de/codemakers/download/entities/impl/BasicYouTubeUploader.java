@@ -21,51 +21,71 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
-import de.codemakers.download.entities.AbstractChannel;
+import de.codemakers.download.entities.AbstractUploader;
 import de.codemakers.download.remote.YouTubeWebService;
 import de.codemakers.download.sources.impl.YouTubeSource;
 
 import java.time.Instant;
 import java.util.List;
 
-public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, YouTubeSource, BasicYouTubeVideo> {
+public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader, YouTubeSource, BasicYouTubeVideo, BasicYouTubePlaylist> {
     
-    public static final String KEY_CHANNEL_ID = "id";
+    public static final String KEY_UPLOADER_ID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_TIMESTAMP = "creationDate";
     
-    public BasicYouTubeChannel(String channelId) {
-        super(channelId);
+    public BasicYouTubeUploader(String uploaderId) {
+        super(uploaderId);
     }
     
-    public BasicYouTubeChannel(String channelId, String name) {
-        super(channelId, name);
+    public BasicYouTubeUploader(String uploaderId, String name) {
+        super(uploaderId, name);
     }
     
     @Override
-    public List<String> getVideoIds() {
+    public List<String> getUploadedVideoIds() {
         throw new NotYetImplementedRuntimeException();
     }
     
     @Override
-    public List<BasicYouTubeVideo> getVideos() {
+    public List<BasicYouTubeVideo> getUploadedVideos() {
         throw new NotYetImplementedRuntimeException();
     }
     
     @Override
-    public boolean hasVideo(String videoId) {
+    public boolean hasVideoUploaded(String videoId) {
         throw new NotYetImplementedRuntimeException();
     }
     
     @Override
-    public boolean hasVideo(BasicYouTubeVideo video) {
+    public boolean hasVideoUploaded(BasicYouTubeVideo video) {
+        throw new NotYetImplementedRuntimeException();
+    }
+    
+    @Override
+    public List<String> getCreatedPlaylistIds() {
+        throw new NotYetImplementedRuntimeException();
+    }
+    
+    @Override
+    public List<BasicYouTubePlaylist> getCreatedPlaylists() {
+        throw new NotYetImplementedRuntimeException();
+    }
+    
+    @Override
+    public boolean hasPlaylistCreated(String playlistId) {
+        throw new NotYetImplementedRuntimeException();
+    }
+    
+    @Override
+    public boolean hasPlaylistCreated(BasicYouTubePlaylist playlist) {
         throw new NotYetImplementedRuntimeException();
     }
     
     @Override
     public JsonObject toJsonObject() {
         final JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(KEY_CHANNEL_ID, getChannelId());
+        jsonObject.addProperty(KEY_UPLOADER_ID, getUploaderId());
         jsonObject.addProperty(KEY_NAME, getName());
         jsonObject.addProperty(KEY_TIMESTAMP, getTimestampAsEpochMilli());
         return jsonObject;
@@ -73,25 +93,25 @@ public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, Yo
     
     @Override
     public String toString() {
-        return "BasicYouTubeChannel{" + "name='" + name + '\'' + ", id='" + id + '\'' + ", timestamp=" + timestamp + '}';
+        return "BasicYouTubeUploader{" + "name='" + name + '\'' + ", source=" + source + ", id='" + id + '\'' + ", timestamp=" + timestamp + '}';
     }
     
-    public static final BasicYouTubeChannel ofJsonObject(JsonObject jsonObject) {
+    public static final BasicYouTubeUploader ofJsonObject(JsonObject jsonObject) {
         if (jsonObject == null) {
             return null;
         }
-        final String channelId = jsonObject.has(KEY_CHANNEL_ID) ? jsonObject.getAsJsonPrimitive(KEY_CHANNEL_ID).getAsString() : null;
+        final String uploaderId = jsonObject.has(KEY_UPLOADER_ID) ? jsonObject.getAsJsonPrimitive(KEY_UPLOADER_ID).getAsString() : null;
         final String name = jsonObject.has(KEY_NAME) ? jsonObject.getAsJsonPrimitive(KEY_NAME).getAsString() : null;
         final long timestamp = jsonObject.has(KEY_TIMESTAMP) ? jsonObject.getAsJsonPrimitive(KEY_TIMESTAMP).getAsLong() : -1;
-        final BasicYouTubeChannel channel = new BasicYouTubeChannel(channelId, name);
+        final BasicYouTubeUploader uploader = new BasicYouTubeUploader(uploaderId, name);
         if (timestamp != -1) {
-            channel.setTimestamp(Instant.ofEpochMilli(timestamp)); //FIXME Upload Date is currently saved as "yyyyMMdd"
+            uploader.setTimestamp(Instant.ofEpochMilli(timestamp)); //FIXME Upload Date is currently saved as "yyyyMMdd"
         }
-        return channel;
+        return uploader;
     }
     
-    public static final List<BasicYouTubeChannel> ofJsonArray(JsonArray jsonArray) {
-        return YouTubeWebService.convertJsonArray(jsonArray, JsonElement::getAsJsonObject, BasicYouTubeChannel::ofJsonObject);
+    public static final List<BasicYouTubeUploader> ofJsonArray(JsonArray jsonArray) {
+        return YouTubeWebService.convertJsonArray(jsonArray, JsonElement::getAsJsonObject, BasicYouTubeUploader::ofJsonObject);
     }
     
 }
