@@ -30,12 +30,16 @@ public class YouTubeSource implements Source<YouTubeSourceType> {
     private transient YouTubeSourceType sourceType;
     
     protected YouTubeSource(String id) {
-        this(id, null);
+        this(id, (String) null);
     }
     
     protected YouTubeSource(String id, String url) {
         this.id = id;
         setUrl(url);
+    }
+    
+    protected YouTubeSource(String id, YouTubeSourceType sourceType) {
+        this(id, null, sourceType);
     }
     
     private YouTubeSource(String id, String url, YouTubeSourceType sourceType) {
@@ -114,6 +118,22 @@ public class YouTubeSource implements Source<YouTubeSourceType> {
             return ofUrl(source);
         }
         return ofId(source);
+    }
+    
+    public static final YouTubeSource videoOfId(String videoId) {
+        return new YouTubeSource(videoId, YouTubeSourceType.VIDEO);
+    }
+    
+    public static final YouTubeSource playlistOfId(String playlistId) {
+        return new YouTubeSource(playlistId, YouTubeSourceType.PLAYLIST);
+    }
+    
+    public static final YouTubeSource channelOfId(String channelId) {
+        return new YouTubeSource(channelId, YouTubeSourceType.CHANNEL);
+    }
+    
+    public static final YouTubeSource userOfId(String channelId) {
+        return new YouTubeSource(channelId, YouTubeSourceType.USER);
     }
     
 }
