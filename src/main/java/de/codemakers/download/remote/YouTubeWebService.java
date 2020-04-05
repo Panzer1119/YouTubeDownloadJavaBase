@@ -20,6 +20,7 @@ package de.codemakers.download.remote;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.base.util.tough.ToughFunction;
 
 import java.util.List;
@@ -31,15 +32,18 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
     public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/%s";
     public static final String TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s";
     public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID = "/videoIds/byPlaylistId/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID = "/playlists/%s";
+    public static final String TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID = "/playlists/byVideoId/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID = "/playlistIds/byVideoId/%s";
     
     private static YouTubeWebService WEB_SERVICE = null;
     
-    public YouTubeWebService(String host) {
-        super(host);
+    public YouTubeWebService(String host, String rootPath) {
+        super(host, rootPath);
     }
     
-    public YouTubeWebService(String host, int port) {
-        super(host, port);
+    public YouTubeWebService(String host, int port, String rootPath) {
+        super(host, port, rootPath);
     }
     
     @Override
@@ -58,6 +62,26 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
     
     public JsonArray getVideoIdsByPlaylistId(String playlistId) {
         return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
+    }
+    
+    public JsonObject getPlaylistsByPlaylistId(String playlistId) {
+        return (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
+    }
+    
+    public JsonArray getPlaylistsByVideoId(String videoId) {
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID, videoId)).executeToJsonElement();
+    }
+    
+    public JsonArray getPlaylistIdsByVideoId(String videoId) {
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID, videoId)).executeToJsonElement();
+    }
+    
+    public boolean isVideoInPlaylist(String videoId, String playlistId) {
+        throw new NotYetImplementedRuntimeException();
+    }
+    
+    public int getIndex(String playlistId, String videoId) {
+        throw new NotYetImplementedRuntimeException();
     }
     
     public static final YouTubeWebService getInstance() {
@@ -90,6 +114,46 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
             return null;
         }
         return webService.getVideoIdsByPlaylistId(playlistId);
+    }
+    
+    public static final JsonObject getPlaylistsByPlaylistIdViaInstance(String playlistId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return null;
+        }
+        return webService.getPlaylistsByPlaylistId(playlistId);
+    }
+    
+    public static final JsonArray getPlaylistsByVideoIdViaInstance(String videoId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return null;
+        }
+        return webService.getPlaylistsByVideoId(videoId);
+    }
+    
+    public static final JsonArray getPlaylistIdsByVideoIdViaInstance(String videoId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return null;
+        }
+        return webService.getPlaylistIdsByVideoId(videoId);
+    }
+    
+    public static final boolean isVideoInPlaylistViaInstance(String videoId, String playlistId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return false;
+        }
+        return webService.isVideoInPlaylist(videoId, playlistId);
+    }
+    
+    public static final int getIndexViaInstance(String playlistId, String videoId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return -1;
+        }
+        return webService.getIndex(playlistId, videoId);
     }
     
     public static final <R> List<R> convertJsonArray(JsonArray jsonArray, ToughFunction<JsonElement, R> function) {
