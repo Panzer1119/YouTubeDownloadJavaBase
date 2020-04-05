@@ -22,26 +22,47 @@ import de.codemakers.base.logger.Logger;
 import de.codemakers.base.multiplets.Doublet;
 import de.codemakers.base.util.JsonSettings;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class WebService<T extends WebService> {
     
     protected final String host;
     protected final int port;
+    protected final String rootPath;
     protected boolean useAuth = false;
+    private transient final Client client = ClientBuilder.newClient();
+    private transient final WebTarget rootWebTarget;
     
-    public WebService(String host) {
-        this(host, -1);
+    public WebService(String host, String rootPath) {
+        this(host, -1, rootPath);
     }
     
-    public WebService(String host, int port) {
+    public WebService(String host, int port, String rootPath) {
+        Objects.requireNonNull(host, "host");
+        while (host.endsWith("/")) {
+            host = host.substring(0, host.length() - "/".length());
+        }
+        if (rootPath != null) {
+            if (!rootPath.startsWith("/")) {
+                rootPath = "/" + rootPath;
+            }
+            while (rootPath.endsWith("/")) {
+                rootPath = rootPath.substring(0, rootPath.length() - "/".length());
+            }
+        }
         this.host = host;
         this.port = port;
+        this.rootPath = rootPath;
+        this.rootWebTarget = createWebTarget(combineUrl(null));
     }
     
     public String getHost() {
@@ -50,6 +71,10 @@ public abstract class WebService<T extends WebService> {
     
     public int getPort() {
         return port;
+    }
+    
+    public String getRootPath() {
+        return rootPath;
     }
     
     public boolean isUsingAuth() {
@@ -61,14 +86,28 @@ public abstract class WebService<T extends WebService> {
         return this;
     }
     
+    protected Client getClient() {
+        return client;
+    }
+    
+    private WebTarget createWebTarget(String uri) {
+        return getClient().target(uri);
+    }
+    
+    protected WebTarget getRootWebTarget() {
+        return rootWebTarget;
+    }
+    
+    protected WebTarget createSubWebTarget(String uri) {
+        return getRootWebTarget().path(uri);
+    }
+    
     protected String combineUrl(String template, Object... values) {
         final String host = getHost();
         final int port = getPort();
-        final String suffix = String.format(template, values);
-        if (port == -1) {
-            return String.format("%s%s", host, suffix);
-        }
-        return String.format("%s:%d%s", host, port, suffix);
+        final String rootPath = getRootPath();
+        final String path = template == null ? "" : String.format(template, values);
+        return String.format("%s%s%s%s", host, port == -1 ? "" : ":" + port, rootPath == null ? "" : rootPath, path.startsWith("/") ? path : "/" + path);
     }
     
     public WebServiceRequest emptyGetRequest() {
@@ -124,9 +163,10 @@ public abstract class WebService<T extends WebService> {
     
     @Override
     public String toString() {
-        return "WebService{" + "host='" + host + '\'' + ", port=" + port + '}';
+        return "WebService{" + "host='" + host + '\'' + ", port=" + port + ", rootPath='" + rootPath + '\'' + ", useAuth=" + useAuth + ", client=" + client + ", rootWebTarget=" + rootWebTarget + '}';
     }
     
+    @Deprecated
     private static final Object executeInternStatic(WebServiceRequest webServiceRequest, boolean returnJsonElement) {
         if (webServiceRequest == null || webServiceRequest.getType() == RequestType.UNKNOWN) {
             Logger.logWarning("WebService::executeIntern");

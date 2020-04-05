@@ -19,6 +19,7 @@ package de.codemakers.download.remote;
 
 import com.google.gson.JsonElement;
 import de.codemakers.base.logger.Logger;
+import de.codemakers.base.util.tough.ToughSupplier;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -29,7 +30,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class WebServiceRequest<W extends WebService<W>> {
+public class WebServiceRequest<T, W extends WebService<W>> implements ToughSupplier<T> {
     
     private final W webService;
     private final RequestType type;
@@ -132,6 +133,11 @@ public class WebServiceRequest<W extends WebService<W>> {
         } catch (UnsupportedEncodingException e) {
             return text;
         }
+    }
+    
+    @Override
+    public T get() throws Exception {
+        return null;
     }
     
 }
