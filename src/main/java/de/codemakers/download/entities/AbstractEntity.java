@@ -21,15 +21,24 @@ import com.google.gson.JsonObject;
 import de.codemakers.download.sources.Source;
 
 import java.time.Instant;
-import java.util.Objects;
 
 public abstract class AbstractEntity<T extends AbstractEntity, S extends Source> {
     
     protected S source;
+    protected String id;
     protected Instant timestamp = null;
     
+    public AbstractEntity(String id) {
+        this(null, id);
+    }
+    
     public AbstractEntity(S source) {
-        setSource(source);
+        this(source, source == null ? null : source.getId());
+    }
+    
+    public AbstractEntity(S source, String id) {
+        this.source = source;
+        this.id = id;
     }
     
     public S getSource() {
@@ -37,12 +46,17 @@ public abstract class AbstractEntity<T extends AbstractEntity, S extends Source>
     }
     
     public T setSource(S source) {
-        this.source = Objects.requireNonNull(source, "source");
+        this.source = source;
         return (T) this;
     }
     
     public String getId() {
-        return getSource().getId();
+        return id;
+    }
+    
+    public T setId(String id) {
+        this.id = id;
+        return (T) this;
     }
     
     public Instant getTimestamp() {
@@ -66,7 +80,7 @@ public abstract class AbstractEntity<T extends AbstractEntity, S extends Source>
     
     @Override
     public String toString() {
-        return "AbstractEntity{" + "source=" + source + ", timestamp=" + timestamp + '}';
+        return "AbstractEntity{" + "source=" + source + ", id='" + id + '\'' + ", timestamp=" + timestamp + '}';
     }
     
 }
