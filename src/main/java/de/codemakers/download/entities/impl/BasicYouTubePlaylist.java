@@ -17,33 +17,66 @@
 
 package de.codemakers.download.entities.impl;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.download.entities.AbstractPlaylist;
 import de.codemakers.download.remote.YouTubeWebService;
 import de.codemakers.download.sources.impl.YouTubeSource;
 
+import java.time.Instant;
 import java.util.List;
 
 public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist, YouTubeSource, BasicYouTubeVideo> {
     
-    //public static final String KEY_TIMESTAMP = "uploadDate";
     public static final String KEY_PLAYLIST_ID = "id";
     public static final String KEY_UPLOADER_ID = "uploaderId";
     public static final String KEY_TITLE = "title";
+    public static final String KEY_PLAYLIST = "playlist";
+    public static final String KEY_TIMESTAMP = "uploadDate";
     //public static final String KEY_COUNT = "count"; //TODO Maybe just send the information from the sql server how many videos are in there?
     
+    protected String playlist;
+    
     public BasicYouTubePlaylist(String playlistId) {
-        super(playlistId);
+        this(YouTubeSource.playlistOfId(playlistId));
+    }
+    
+    public BasicYouTubePlaylist(YouTubeSource source) {
+        super(source);
+        this.playlist = null;
     }
     
     public BasicYouTubePlaylist(String playlistId, String uploaderId, String title) {
-        super(playlistId, uploaderId, title);
+        this(playlistId, uploaderId, title, null);
+    }
+    
+    public BasicYouTubePlaylist(YouTubeSource source, String uploaderId, String title) {
+        this(source, uploaderId, title, null);
+    }
+    
+    public BasicYouTubePlaylist(String playlistId, String uploaderId, String title, String playlist) {
+        this(YouTubeSource.playlistOfId(playlistId), uploaderId, title, playlist);
+    }
+    
+    public BasicYouTubePlaylist(YouTubeSource source, String uploaderId, String title, String playlist) {
+        super(source, uploaderId, title);
+        this.playlist = playlist;
+    }
+    
+    public String getPlaylist() {
+        return playlist;
+    }
+    
+    public BasicYouTubePlaylist setPlaylist(String playlist) {
+        this.playlist = playlist;
+        return this;
     }
     
     @Override
     public int getVideoCount() {
-        return 0;
+        throw new NotYetImplementedRuntimeException();
     }
     
     @Override
@@ -58,27 +91,22 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
     
     @Override
     public boolean containsVideo(String videoId) {
-        return false;
+        throw new NotYetImplementedRuntimeException();
     }
     
     @Override
     public boolean containsVideo(BasicYouTubeVideo video) {
-        return false;
+        throw new NotYetImplementedRuntimeException();
     }
     
     @Override
     public int getIndex(String videoId) {
-        return 0;
+        throw new NotYetImplementedRuntimeException();
     }
     
     @Override
     public int getIndex(BasicYouTubeVideo video) {
-        return 0;
-    }
-    
-    @Override
-    public YouTubeSource getSource() {
-        return null;
+        throw new NotYetImplementedRuntimeException();
     }
     
     @Override
@@ -87,13 +115,34 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
         jsonObject.addProperty(KEY_PLAYLIST_ID, getPlaylistId());
         jsonObject.addProperty(KEY_UPLOADER_ID, getUploaderId());
         jsonObject.addProperty(KEY_TITLE, getTitle());
+        jsonObject.addProperty(KEY_PLAYLIST, getPlaylist());
         //jsonObject.addProperty(KEY_TIMESTAMP, getTimestampAsEpochMilli());
         return jsonObject;
     }
     
     @Override
     public String toString() {
-        return "BasicYouTubePlaylist{" + "uploaderId='" + uploaderId + '\'' + ", title='" + title + '\'' + ", id='" + id + '\'' + ", timestamp=" + timestamp + '}';
+        return "BasicYouTubePlaylist{" + "playlist='" + playlist + '\'' + ", uploaderId='" + uploaderId + '\'' + ", title='" + title + '\'' + ", source=" + source + ", timestamp=" + timestamp + '}';
+    }
+    
+    public static final BasicYouTubePlaylist ofJsonObject(JsonObject jsonObject) {
+        if (jsonObject == null) {
+            return null;
+        }
+        final String playlistId = jsonObject.has(KEY_PLAYLIST_ID) ? jsonObject.getAsJsonPrimitive(KEY_PLAYLIST_ID).getAsString() : null;
+        final String uploaderId = jsonObject.has(KEY_UPLOADER_ID) ? jsonObject.getAsJsonPrimitive(KEY_UPLOADER_ID).getAsString() : null;
+        final String title = jsonObject.has(KEY_TITLE) ? jsonObject.getAsJsonPrimitive(KEY_TITLE).getAsString() : null;
+        final String playlist_ = jsonObject.has(KEY_PLAYLIST) ? jsonObject.getAsJsonPrimitive(KEY_PLAYLIST).getAsString() : null;
+        final long timestamp = jsonObject.has(KEY_TIMESTAMP) ? jsonObject.getAsJsonPrimitive(KEY_TIMESTAMP).getAsLong() : -1;
+        final BasicYouTubePlaylist playlist = new BasicYouTubePlaylist(playlistId, uploaderId, title, playlist_);
+        if (timestamp != -1) {
+            playlist.setTimestamp(Instant.ofEpochMilli(timestamp)); //FIXME Upload Date is currently saved as "yyyyMMdd"
+        }
+        return playlist;
+    }
+    
+    public static final List<BasicYouTubePlaylist> ofJsonArray(JsonArray jsonArray) {
+        return YouTubeWebService.convertJsonArray(jsonArray, JsonElement::getAsJsonObject, BasicYouTubePlaylist::ofJsonObject);
     }
     
 }

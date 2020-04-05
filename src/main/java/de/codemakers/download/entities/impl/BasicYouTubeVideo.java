@@ -42,7 +42,7 @@ public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeS
     protected String altTitle;
     
     public BasicYouTubeVideo(String videoId) {
-        this(YouTubeSource.ofId(videoId));
+        this(YouTubeSource.videoOfId(videoId));
     }
     
     public BasicYouTubeVideo(YouTubeSource source) {
@@ -52,7 +52,7 @@ public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeS
     }
     
     public BasicYouTubeVideo(String videoId, String uploaderId, String title, long durationMillis) {
-        this(YouTubeSource.ofId(videoId), uploaderId, title, durationMillis);
+        this(YouTubeSource.videoOfId(videoId), uploaderId, title, durationMillis);
     }
     
     public BasicYouTubeVideo(YouTubeSource source, String uploaderId, String title, long durationMillis) {
@@ -60,7 +60,7 @@ public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeS
     }
     
     public BasicYouTubeVideo(String videoId, String channelId, String uploaderId, String title, String altTitle, long durationMillis) {
-        this(YouTubeSource.ofId(videoId), channelId, uploaderId, title, altTitle, durationMillis);
+        this(YouTubeSource.videoOfId(videoId), channelId, uploaderId, title, altTitle, durationMillis);
     }
     
     public BasicYouTubeVideo(YouTubeSource source, String channelId, String uploaderId, String title, String altTitle, long durationMillis) {

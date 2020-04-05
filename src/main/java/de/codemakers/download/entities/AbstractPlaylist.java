@@ -26,22 +26,18 @@ public abstract class AbstractPlaylist<T extends AbstractPlaylist, S extends Sou
     protected String uploaderId;
     protected String title;
     
-    public AbstractPlaylist(String playlistId) {
-        this(playlistId, null, null);
+    public AbstractPlaylist(S source) {
+        this(source, null, null);
     }
     
-    public AbstractPlaylist(String playlistId, String uploaderId, String title) {
-        super(playlistId);
+    public AbstractPlaylist(S source, String uploaderId, String title) {
+        super(source);
         this.uploaderId = uploaderId;
         this.title = title;
     }
     
     public String getPlaylistId() {
         return getId();
-    }
-    
-    public T setPlaylistId(String playlistId) {
-        return setId(playlistId);
     }
     
     public String getUploaderId() {
@@ -78,7 +74,7 @@ public abstract class AbstractPlaylist<T extends AbstractPlaylist, S extends Sou
     
     @Override
     public String toString() {
-        return "AbstractPlaylist{" + "uploaderId='" + uploaderId + '\'' + ", title='" + title + '\'' + ", id='" + id + '\'' + ", timestamp=" + timestamp + '}';
+        return "AbstractPlaylist{" + "uploaderId='" + uploaderId + '\'' + ", title='" + title + '\'' + ", source=" + source + ", timestamp=" + timestamp + '}';
     }
     
 }
