@@ -20,7 +20,6 @@ package de.codemakers.download.entities.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.download.entities.AbstractVideo;
 import de.codemakers.download.remote.YouTubeWebService;
 import de.codemakers.download.sources.impl.YouTubeSource;
@@ -89,32 +88,44 @@ public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeS
     
     @Override
     public List<String> getPlaylistIds() {
-        throw new NotYetImplementedRuntimeException();
+        return YouTubeWebService.convertJsonArray(YouTubeWebService.getPlaylistIdsByVideoIdViaInstance(getVideoId()), JsonElement::getAsString);
     }
     
     @Override
     public List<BasicYouTubePlaylist> getPlaylists() {
-        throw new NotYetImplementedRuntimeException();
+        return BasicYouTubePlaylist.ofJsonArray(YouTubeWebService.getPlaylistsByVideoIdViaInstance(getVideoId()));
     }
     
     @Override
     public boolean isInPlaylist(String playlistId) {
-        throw new NotYetImplementedRuntimeException();
+        if (playlistId == null || playlistId.isEmpty()) {
+            return false;
+        }
+        return YouTubeWebService.isVideoInPlaylistViaInstance(getVideoId(), playlistId);
     }
     
     @Override
     public boolean isInPlaylist(BasicYouTubePlaylist playlist) {
-        throw new NotYetImplementedRuntimeException();
+        if (playlist == null) {
+            return false;
+        }
+        return isInPlaylist(playlist.getPlaylistId());
     }
     
     @Override
     public int getIndexInPlaylist(String playlistId) {
-        throw new NotYetImplementedRuntimeException();
+        if (playlistId == null || playlistId.isEmpty()) {
+            return -1;
+        }
+        return YouTubeWebService.getIndexViaInstance(playlistId, getVideoId());
     }
     
     @Override
     public int getIndexInPlaylist(BasicYouTubePlaylist playlist) {
-        throw new NotYetImplementedRuntimeException();
+        if (playlist == null) {
+            return -1;
+        }
+        return getIndexInPlaylist(playlist.getPlaylistId());
     }
     
     @Override

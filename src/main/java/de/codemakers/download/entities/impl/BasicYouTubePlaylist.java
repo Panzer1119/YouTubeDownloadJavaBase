@@ -91,22 +91,34 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
     
     @Override
     public boolean containsVideo(String videoId) {
-        throw new NotYetImplementedRuntimeException();
+        if (videoId == null || videoId.isEmpty()) {
+            return false;
+        }
+        return YouTubeWebService.isVideoInPlaylistViaInstance(videoId, getPlaylistId());
     }
     
     @Override
     public boolean containsVideo(BasicYouTubeVideo video) {
-        throw new NotYetImplementedRuntimeException();
+        if (video == null) {
+            return false;
+        }
+        return containsVideo(video.getVideoId());
     }
     
     @Override
     public int getIndex(String videoId) {
-        throw new NotYetImplementedRuntimeException();
+        if (videoId == null || videoId.isEmpty()) {
+            return -1;
+        }
+        return YouTubeWebService.getIndexViaInstance(getPlaylistId(), videoId);
     }
     
     @Override
     public int getIndex(BasicYouTubeVideo video) {
-        throw new NotYetImplementedRuntimeException();
+        if (video == null) {
+            return -1;
+        }
+        return getIndex(video.getVideoId());
     }
     
     @Override
