@@ -83,9 +83,9 @@ public abstract class WebService<T extends WebService> {
         return useAuth;
     }
     
-    public WebService setUseAuth(boolean useAuth) {
+    public T setUseAuth(boolean useAuth) {
         this.useAuth = useAuth;
-        return this;
+        return (T) this;
     }
     
     protected Client getClient() {
