@@ -51,6 +51,8 @@ public abstract class AbstractChannel<T extends AbstractChannel, S extends Sourc
         return (T) this;
     }
     
+    public abstract int getVideoCount();
+    
     public abstract List<String> getVideoIds();
     
     public abstract List<V> getVideos();

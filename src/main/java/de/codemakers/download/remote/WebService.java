@@ -35,6 +35,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class WebService<T extends WebService> {
     
+    public static final String KEY_RESULT = "result";
+    
     protected final String host;
     protected final int port;
     protected final String rootPath;

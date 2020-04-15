@@ -51,6 +51,8 @@ public abstract class AbstractUploader<T extends AbstractUploader, S extends Sou
         return (T) this;
     }
     
+    public abstract int getVideoCount();
+    
     public abstract List<String> getUploadedVideoIds();
     
     public abstract List<V> getUploadedVideos();
@@ -58,6 +60,8 @@ public abstract class AbstractUploader<T extends AbstractUploader, S extends Sou
     public abstract boolean hasVideoUploaded(String videoId);
     
     public abstract boolean hasVideoUploaded(V video);
+    
+    public abstract int getPlaylistCount();
     
     public abstract List<String> getCreatedPlaylistIds();
     

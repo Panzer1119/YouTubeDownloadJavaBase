@@ -20,7 +20,6 @@ package de.codemakers.download.remote;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.base.util.tough.ToughFunction;
 
 import java.util.List;
@@ -29,12 +28,29 @@ import java.util.stream.StreamSupport;
 
 public class YouTubeWebService extends WebService<YouTubeWebService> {
     
-    public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/byVideoId/%s";
     public static final String TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s";
     public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID = "/videoIds/byPlaylistId/%s";
-    public static final String TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID = "/playlists/%s";
+    public static final String TEMPLATE_API_GET_VIDEOS_BY_CHANNEL_ID = "/videos/byChannelId/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_CHANNEL_ID = "/videoIds/byChannelId/%s";
+    public static final String TEMPLATE_API_GET_VIDEOS_BY_UPLOADER_ID = "/videos/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_UPLOADER_ID = "/videoIds/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getCount";
+    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_CHANNEL_ID = "/videos/byChannelId/%s/getCount";
+    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getCount";
+    public static final String TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID = "/playlists/byPlaylistId/%s";
     public static final String TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID = "/playlists/byVideoId/%s";
     public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID = "/playlistIds/byVideoId/%s";
+    public static final String TEMPLATE_API_GET_PLAYLISTS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_UPLOADER_ID = "/playlistIds/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_INDEX_BY_PLAYLIST_ID_AND_VIDEO_ID = "/playlists/byPlaylistId/%s/getIndex/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getCount";
+    public static final String TEMPLATE_API_GET_PLAYLIST_ID_CONTAINS_VIDEO_ID = "/playlists/byPlaylistId/%s/containsVideo/%s";
+    public static final String TEMPLATE_API_GET_CHANNEL_BY_CHANNEL_ID = "/channels/byChannelId/%s";
+    public static final String TEMPLATE_API_GET_CHANNEL_ID_HAS_VIDEO_ID = "/channels/byChannelId/%s/hasVideo/%s";
+    public static final String TEMPLATE_API_GET_UPLOADER_BY_UPLOADER_ID = "/uploaders/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_UPLOADER_ID_UPLOADED_VIDEO_ID = "/uploaders/byUploaderId/%s/uploadedVideo/%s";
+    public static final String TEMPLATE_API_GET_UPLOADER_ID_CREATED_PLAYLIST_ID = "/uploaders/byUploaderId/%s/createdPlaylist/%s";
     
     private static YouTubeWebService WEB_SERVICE = null;
     
@@ -56,72 +72,116 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
         return (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID, videoId)).executeToJsonElement();
     }
     
-    public JsonArray getVideosByPlaylistId(String playlistId) {
-        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
-    }
-    
     public JsonArray getVideoIdsByPlaylistId(String playlistId) {
         return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
     }
     
-    public JsonObject getPlaylistsByPlaylistId(String playlistId) {
-        return (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
+    public JsonArray getVideosByPlaylistId(String playlistId) {
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
     }
     
-    public JsonArray getPlaylistsByVideoId(String videoId) {
-        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID, videoId)).executeToJsonElement();
+    public JsonObject getPlaylistByPlaylistId(String playlistId) {
+        return (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
     }
     
     public JsonArray getPlaylistIdsByVideoId(String videoId) {
         return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID, videoId)).executeToJsonElement();
     }
     
+    public JsonArray getPlaylistsByVideoId(String videoId) {
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID, videoId)).executeToJsonElement();
+    }
+    
     public boolean isVideoInPlaylist(String videoId, String playlistId) {
-        throw new NotYetImplementedRuntimeException();
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_ID_CONTAINS_VIDEO_ID, playlistId, videoId)).executeToJsonElement();
+        return jsonObject != null && jsonObject.has(KEY_RESULT) && jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsBoolean();
     }
     
     public int getIndex(String playlistId, String videoId) {
-        throw new NotYetImplementedRuntimeException();
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_INDEX_BY_PLAYLIST_ID_AND_VIDEO_ID, playlistId, videoId)).executeToJsonElement();
+        if (jsonObject == null || !jsonObject.has(KEY_RESULT)) {
+            return -1;
+        }
+        return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
     }
     
     public int getVideoCountByPlaylistId(String playlistId) {
-        throw new NotYetImplementedRuntimeException();
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_COUNT_BY_PLAYLIST_ID, playlistId)).executeToJsonElement();
+        if (jsonObject == null || !jsonObject.has(KEY_RESULT)) {
+            return -1;
+        }
+        return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
+    }
+    
+    public JsonObject getChannelByChannelId(String channelId) {
+        return (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_CHANNEL_BY_CHANNEL_ID, channelId)).executeToJsonElement();
     }
     
     public JsonArray getVideoIdsByChannelId(String channelId) {
-        throw new NotYetImplementedRuntimeException();
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_IDS_BY_CHANNEL_ID, channelId)).executeToJsonElement();
     }
     
     public JsonArray getVideosByChannelId(String channelId) {
-        throw new NotYetImplementedRuntimeException();
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEOS_BY_CHANNEL_ID, channelId)).executeToJsonElement();
     }
     
     public boolean isVideoOnChannel(String videoId, String channelId) {
-        throw new NotYetImplementedRuntimeException();
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_CHANNEL_ID_HAS_VIDEO_ID, channelId, videoId)).executeToJsonElement();
+        return jsonObject != null && jsonObject.has(KEY_RESULT) && jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsBoolean();
+    }
+    
+    public int getVideoCountByChannelId(String channelId) {
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_COUNT_BY_CHANNEL_ID, channelId)).executeToJsonElement();
+        if (jsonObject == null || !jsonObject.has(KEY_RESULT)) {
+            return -1;
+        }
+        return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
+    }
+    
+    public JsonObject getUploaderByUploaderId(String uploaderId) {
+        return (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_UPLOADER_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
     }
     
     public JsonArray getVideoIdsByUploaderId(String uploaderId) {
-        throw new NotYetImplementedRuntimeException();
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_IDS_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
     }
     
     public JsonArray getVideosByUploaderId(String uploaderId) {
-        throw new NotYetImplementedRuntimeException();
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_VIDEOS_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
     }
     
     public boolean hasVideoUploaded(String videoId, String uploaderId) {
-        throw new NotYetImplementedRuntimeException();
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_UPLOADER_ID_UPLOADED_VIDEO_ID, uploaderId, videoId)).executeToJsonElement();
+        return jsonObject != null && jsonObject.has(KEY_RESULT) && jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsBoolean();
+    }
+    
+    public int getVideoCountByUploaderId(String uploaderId) {
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_VIDEO_COUNT_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
+        if (jsonObject == null || !jsonObject.has(KEY_RESULT)) {
+            return -1;
+        }
+        return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
     }
     
     public JsonArray getPlaylistIdsByUploaderId(String uploaderId) {
-        throw new NotYetImplementedRuntimeException();
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_IDS_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
     }
     
     public JsonArray getPlaylistsByUploaderId(String uploaderId) {
-        throw new NotYetImplementedRuntimeException();
+        return (JsonArray) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLISTS_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
     }
     
     public boolean hasPlaylistCreated(String playlistId, String uploaderId) {
-        throw new NotYetImplementedRuntimeException();
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_UPLOADER_ID_CREATED_PLAYLIST_ID, uploaderId, playlistId)).executeToJsonElement();
+        return jsonObject != null && jsonObject.has(KEY_RESULT) && jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsBoolean();
+    }
+    
+    public int getPlaylistCountByUploaderId(String uploaderId) {
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_COUNT_BY_UPLOADER_ID, uploaderId)).executeToJsonElement();
+        if (jsonObject == null || !jsonObject.has(KEY_RESULT)) {
+            return -1;
+        }
+        return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
     }
     
     public static final YouTubeWebService getInstance() {
@@ -156,12 +216,12 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
         return webService.getVideoIdsByPlaylistId(playlistId);
     }
     
-    public static final JsonObject getPlaylistsByPlaylistIdViaInstance(String playlistId) {
+    public static final JsonObject getPlaylistByPlaylistIdViaInstance(String playlistId) {
         final YouTubeWebService webService = getInstance();
         if (webService == null) {
             return null;
         }
-        return webService.getPlaylistsByPlaylistId(playlistId);
+        return webService.getPlaylistByPlaylistId(playlistId);
     }
     
     public static final JsonArray getPlaylistsByVideoIdViaInstance(String videoId) {
@@ -204,6 +264,14 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
         return webService.getVideoCountByPlaylistId(playlistId);
     }
     
+    public static final JsonObject getChannelByChannelIdViaInstance(String channelId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return null;
+        }
+        return webService.getChannelByChannelId(channelId);
+    }
+    
     public static final JsonArray getVideoIdsByChannelIdViaInstance(String channelId) {
         final YouTubeWebService webService = getInstance();
         if (webService == null) {
@@ -226,6 +294,22 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
             return false;
         }
         return webService.isVideoOnChannel(videoId, channelId);
+    }
+    
+    public static final int getVideoCountByChannelIdViaInstance(String channelId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return -1;
+        }
+        return webService.getVideoCountByChannelId(channelId);
+    }
+    
+    public static final JsonObject getUploaderByUploaderIdViaInstance(String uploaderId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return null;
+        }
+        return webService.getUploaderByUploaderId(uploaderId);
     }
     
     public static final JsonArray getVideoIdsByUploaderIdViaInstance(String uploaderId) {
@@ -252,6 +336,14 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
         return webService.hasVideoUploaded(videoId, uploaderId);
     }
     
+    public static final int getVideoCountByUploaderIdViaInstance(String uploaderId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return -1;
+        }
+        return webService.getVideoCountByUploaderId(uploaderId);
+    }
+    
     public static final JsonArray getPlaylistIdsByUploaderIdViaInstance(String uploaderId) {
         final YouTubeWebService webService = getInstance();
         if (webService == null) {
@@ -274,6 +366,14 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
             return false;
         }
         return webService.hasPlaylistCreated(playlistId, uploaderId);
+    }
+    
+    public static final int getPlaylistCountByUploaderIdViaInstance(String uploaderId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return -1;
+        }
+        return webService.getPlaylistCountByUploaderId(uploaderId);
     }
     
     public static final <R> List<R> convertJsonArray(JsonArray jsonArray, ToughFunction<JsonElement, R> function) {

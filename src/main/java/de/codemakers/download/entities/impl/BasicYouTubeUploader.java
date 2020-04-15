@@ -42,6 +42,11 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
     }
     
     @Override
+    public int getVideoCount() {
+        return YouTubeWebService.getVideoCountByUploaderIdViaInstance(getUploaderId());
+    }
+    
+    @Override
     public List<String> getUploadedVideoIds() {
         return YouTubeWebService.convertJsonArray(YouTubeWebService.getVideoIdsByUploaderIdViaInstance(getUploaderId()), JsonElement::getAsString);
     }
@@ -65,6 +70,11 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
             return false;
         }
         return hasVideoUploaded(video.getVideoId());
+    }
+    
+    @Override
+    public int getPlaylistCount() {
+        return YouTubeWebService.getPlaylistCountByUploaderIdViaInstance(getUploaderId());
     }
     
     @Override

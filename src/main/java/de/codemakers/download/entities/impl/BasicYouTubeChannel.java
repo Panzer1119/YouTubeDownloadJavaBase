@@ -42,6 +42,11 @@ public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, Yo
     }
     
     @Override
+    public int getVideoCount() {
+        return YouTubeWebService.getVideoCountByChannelIdViaInstance(getChannelId());
+    }
+    
+    @Override
     public List<String> getVideoIds() {
         return YouTubeWebService.convertJsonArray(YouTubeWebService.getVideoIdsByChannelIdViaInstance(getChannelId()), JsonElement::getAsString);
     }
