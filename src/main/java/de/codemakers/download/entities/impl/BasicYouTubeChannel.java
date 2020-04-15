@@ -20,7 +20,6 @@ package de.codemakers.download.entities.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.download.entities.AbstractChannel;
 import de.codemakers.download.remote.YouTubeWebService;
 import de.codemakers.download.sources.impl.YouTubeSource;
@@ -44,22 +43,28 @@ public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, Yo
     
     @Override
     public List<String> getVideoIds() {
-        throw new NotYetImplementedRuntimeException();
+        return YouTubeWebService.convertJsonArray(YouTubeWebService.getVideoIdsByChannelIdViaInstance(getChannelId()), JsonElement::getAsString);
     }
     
     @Override
     public List<BasicYouTubeVideo> getVideos() {
-        throw new NotYetImplementedRuntimeException();
+        return BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByChannelIdViaInstance(getChannelId()));
     }
     
     @Override
     public boolean hasVideo(String videoId) {
-        throw new NotYetImplementedRuntimeException();
+        if (videoId == null || videoId.isEmpty()) {
+            return false;
+        }
+        return YouTubeWebService.isVideoOnChannelViaInstance(videoId, getChannelId());
     }
     
     @Override
     public boolean hasVideo(BasicYouTubeVideo video) {
-        throw new NotYetImplementedRuntimeException();
+        if (video == null) {
+            return false;
+        }
+        return hasVideo(video.getVideoId());
     }
     
     @Override

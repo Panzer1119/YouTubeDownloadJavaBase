@@ -20,7 +20,6 @@ package de.codemakers.download.entities.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.download.entities.AbstractUploader;
 import de.codemakers.download.remote.YouTubeWebService;
 import de.codemakers.download.sources.impl.YouTubeSource;
@@ -44,42 +43,54 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
     
     @Override
     public List<String> getUploadedVideoIds() {
-        throw new NotYetImplementedRuntimeException();
+        return YouTubeWebService.convertJsonArray(YouTubeWebService.getVideoIdsByUploaderIdViaInstance(getUploaderId()), JsonElement::getAsString);
     }
     
     @Override
     public List<BasicYouTubeVideo> getUploadedVideos() {
-        throw new NotYetImplementedRuntimeException();
+        return BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByUploaderIdViaInstance(getUploaderId()));
     }
     
     @Override
     public boolean hasVideoUploaded(String videoId) {
-        throw new NotYetImplementedRuntimeException();
+        if (videoId == null || videoId.isEmpty()) {
+            return false;
+        }
+        return YouTubeWebService.hasVideoUploadedViaInstance(videoId, getUploaderId());
     }
     
     @Override
     public boolean hasVideoUploaded(BasicYouTubeVideo video) {
-        throw new NotYetImplementedRuntimeException();
+        if (video == null) {
+            return false;
+        }
+        return hasVideoUploaded(video.getVideoId());
     }
     
     @Override
     public List<String> getCreatedPlaylistIds() {
-        throw new NotYetImplementedRuntimeException();
+        return YouTubeWebService.convertJsonArray(YouTubeWebService.getPlaylistIdsByUploaderIdViaInstance(getUploaderId()), JsonElement::getAsString);
     }
     
     @Override
     public List<BasicYouTubePlaylist> getCreatedPlaylists() {
-        throw new NotYetImplementedRuntimeException();
+        return BasicYouTubePlaylist.ofJsonArray(YouTubeWebService.getPlaylistsByUploaderIdViaInstance(getUploaderId()));
     }
     
     @Override
     public boolean hasPlaylistCreated(String playlistId) {
-        throw new NotYetImplementedRuntimeException();
+        if (playlistId == null || playlistId.isEmpty()) {
+            return false;
+        }
+        return YouTubeWebService.hasPlaylistCreatedViaInstance(playlistId, getUploaderId());
     }
     
     @Override
     public boolean hasPlaylistCreated(BasicYouTubePlaylist playlist) {
-        throw new NotYetImplementedRuntimeException();
+        if (playlist == null) {
+            return false;
+        }
+        return hasPlaylistCreated(playlist.getPlaylistId());
     }
     
     @Override

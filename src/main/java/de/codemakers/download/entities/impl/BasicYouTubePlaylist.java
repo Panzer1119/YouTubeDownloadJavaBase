@@ -20,7 +20,6 @@ package de.codemakers.download.entities.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import de.codemakers.base.exceptions.NotYetImplementedRuntimeException;
 import de.codemakers.download.entities.AbstractPlaylist;
 import de.codemakers.download.remote.YouTubeWebService;
 import de.codemakers.download.sources.impl.YouTubeSource;
@@ -76,7 +75,7 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
     
     @Override
     public int getVideoCount() {
-        throw new NotYetImplementedRuntimeException();
+        return YouTubeWebService.getVideoCountByPlaylistIdViaInstance(getPlaylistId());
     }
     
     @Override
