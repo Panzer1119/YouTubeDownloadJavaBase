@@ -30,20 +30,21 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
     
     public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/byVideoId/%s";
     public static final String TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s";
-    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID = "/videoIds/byPlaylistId/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getIds";
     public static final String TEMPLATE_API_GET_VIDEOS_BY_CHANNEL_ID = "/videos/byChannelId/%s";
-    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_CHANNEL_ID = "/videoIds/byChannelId/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_CHANNEL_ID = "/videos/byChannelId/%s/getIds";
     public static final String TEMPLATE_API_GET_VIDEOS_BY_UPLOADER_ID = "/videos/byUploaderId/%s";
-    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_UPLOADER_ID = "/videoIds/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getIds";
     public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getCount";
     public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_CHANNEL_ID = "/videos/byChannelId/%s/getCount";
     public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getCount";
     public static final String TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID = "/playlists/byPlaylistId/%s";
     public static final String TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID = "/playlists/byVideoId/%s";
-    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID = "/playlistIds/byVideoId/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID = "/playlists/byVideoId/%s/getIds";
     public static final String TEMPLATE_API_GET_PLAYLISTS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s";
-    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_UPLOADER_ID = "/playlistIds/byUploaderId/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getIds";
     public static final String TEMPLATE_API_GET_INDEX_BY_PLAYLIST_ID_AND_VIDEO_ID = "/playlists/byPlaylistId/%s/getIndex/%s";
+    public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_VIDEO_ID = "/playlists/byVideoId/%s/getCount";
     public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getCount";
     public static final String TEMPLATE_API_GET_PLAYLIST_ID_CONTAINS_VIDEO_ID = "/playlists/byPlaylistId/%s/containsVideo/%s";
     public static final String TEMPLATE_API_GET_CHANNEL_BY_CHANNEL_ID = "/channels/byChannelId/%s";
@@ -174,6 +175,14 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
     public boolean hasPlaylistCreated(String playlistId, String uploaderId) {
         final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_UPLOADER_ID_CREATED_PLAYLIST_ID, uploaderId, playlistId)).executeToJsonElement();
         return jsonObject != null && jsonObject.has(KEY_RESULT) && jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsBoolean();
+    }
+    
+    public int getPlaylistCountByVideoId(String videoId) {
+        final JsonObject jsonObject = (JsonObject) createGetRequest(String.format(TEMPLATE_API_GET_PLAYLIST_COUNT_BY_VIDEO_ID, videoId)).executeToJsonElement();
+        if (jsonObject == null || !jsonObject.has(KEY_RESULT)) {
+            return -1;
+        }
+        return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
     }
     
     public int getPlaylistCountByUploaderId(String uploaderId) {
@@ -366,6 +375,14 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
             return false;
         }
         return webService.hasPlaylistCreated(playlistId, uploaderId);
+    }
+    
+    public static final int getPlaylistCountByVideoIdViaInstance(String videoId) {
+        final YouTubeWebService webService = getInstance();
+        if (webService == null) {
+            return -1;
+        }
+        return webService.getPlaylistCountByVideoId(videoId);
     }
     
     public static final int getPlaylistCountByUploaderIdViaInstance(String uploaderId) {
