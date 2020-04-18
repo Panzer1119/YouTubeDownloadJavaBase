@@ -33,14 +33,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class WebService<T extends WebService> {
+public abstract class WebService {
     
     public static final String KEY_RESULT = "result";
     
     protected final String host;
     protected final int port;
     protected final String rootPath;
-    protected boolean useAuth = false;
     private transient final Client client = ClientBuilder.newClient();
     private transient final WebTarget rootWebTarget;
     
@@ -77,15 +76,6 @@ public abstract class WebService<T extends WebService> {
     
     public String getRootPath() {
         return rootPath;
-    }
-    
-    public boolean isUsingAuth() {
-        return useAuth;
-    }
-    
-    public T setUseAuth(boolean useAuth) {
-        this.useAuth = useAuth;
-        return (T) this;
     }
     
     protected Client getClient() {
@@ -155,17 +145,12 @@ public abstract class WebService<T extends WebService> {
     }
     
     private final Object executeIntern(WebServiceRequest webServiceRequest, boolean returnJsonElement) {
-        if (isUsingAuth()) {
-            auth(webServiceRequest);
-        }
         return executeInternStatic(webServiceRequest, returnJsonElement);
     }
     
-    protected abstract void auth(WebServiceRequest webServiceRequest);
-    
     @Override
     public String toString() {
-        return "WebService{" + "host='" + host + '\'' + ", port=" + port + ", rootPath='" + rootPath + '\'' + ", useAuth=" + useAuth + ", client=" + client + ", rootWebTarget=" + rootWebTarget + '}';
+        return "WebService{" + "host='" + host + '\'' + ", port=" + port + ", rootPath='" + rootPath + '\'' + ", client=" + client + ", rootWebTarget=" + rootWebTarget + '}';
     }
     
     @Deprecated

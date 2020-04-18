@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class YouTubeWebService extends WebService<YouTubeWebService> {
+public class YouTubeWebService extends WebService {
     
     public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/byVideoId/%s";
     public static final String TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s";
@@ -61,12 +61,6 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
     
     public YouTubeWebService(String host, int port, String rootPath) {
         super(host, port, rootPath);
-    }
-    
-    @Override
-    protected void auth(WebServiceRequest webServiceRequest) {
-        webServiceRequest.addParameter("authToken", "AUTH_TOKEN"); //DEBUG REMOVE this!!!
-        //TODO IMPORTANT
     }
     
     public JsonObject getVideoByVideoId(String videoId) {
@@ -191,6 +185,11 @@ public class YouTubeWebService extends WebService<YouTubeWebService> {
             return -1;
         }
         return jsonObject.getAsJsonPrimitive(KEY_RESULT).getAsInt();
+    }
+    
+    @Override
+    public String toString() {
+        return "YouTubeWebService{" + "host='" + host + '\'' + ", port=" + port + ", rootPath='" + rootPath + '\'' + '}';
     }
     
     public static final YouTubeWebService getInstance() {

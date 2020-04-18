@@ -19,7 +19,7 @@ package de.codemakers.download.remote;
 
 import com.google.gson.JsonElement;
 import de.codemakers.base.logger.Logger;
-import de.codemakers.base.util.tough.ToughSupplier;
+import de.codemakers.download.entities.AbstractToken;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -30,7 +30,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-public class WebServiceRequest<T, W extends WebService<W>> implements ToughSupplier<T> {
+public class WebServiceRequest<T extends WebServiceRequest, W extends WebService> {
     
     private final W webService;
     private final RequestType type;
@@ -68,18 +68,22 @@ public class WebServiceRequest<T, W extends WebService<W>> implements ToughSuppl
         return path;
     }
     
-    public WebServiceRequest setPath(String path) {
+    public T setPath(String path) {
         this.path = path;
-        return this;
+        return (T) this;
     }
     
     public Map<String, String> getParameters() {
         return parameters;
     }
     
-    public WebServiceRequest addParameter(String key, String value) {
+    public T addParameter(String key, String value) {
+        if (value == null) {
+            parameters.remove(key);
+            return (T) this;
+        }
         parameters.put(key, value);
-        return this;
+        return (T) this;
     }
     
     public URL toURL(boolean withParameters) {
@@ -114,6 +118,13 @@ public class WebServiceRequest<T, W extends WebService<W>> implements ToughSuppl
         return baseUrl + combineParameters();
     }
     
+    public T auth(AbstractToken token) {
+        if (token == null) {
+            return addParameter(AbstractToken.KEY_TOKEN, null);
+        }
+        return addParameter(AbstractToken.KEY_TOKEN, token.getToken());
+    }
+    
     public void execute() {
         getWebService().execute(this);
     }
@@ -133,11 +144,6 @@ public class WebServiceRequest<T, W extends WebService<W>> implements ToughSuppl
         } catch (UnsupportedEncodingException e) {
             return text;
         }
-    }
-    
-    @Override
-    public T get() throws Exception {
-        return null;
     }
     
 }
