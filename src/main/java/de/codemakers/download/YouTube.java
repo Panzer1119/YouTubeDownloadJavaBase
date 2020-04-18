@@ -17,10 +17,16 @@
 
 package de.codemakers.download;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class YouTube {
+    
+    public static final Gson GSON = new GsonBuilder().create();
+    public static final Gson GSON_PRETTY = new GsonBuilder().setPrettyPrinting().create();
     
     // // YouTube URL Pattern
     // All YouTube URL Pattern
