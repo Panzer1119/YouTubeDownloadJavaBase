@@ -27,7 +27,7 @@ import de.codemakers.download.sources.impl.YouTubeSource;
 import java.time.Instant;
 import java.util.List;
 
-public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, YouTubeSource, BasicYouTubeVideo> {
+public class BasicYouTubeChannel<T extends BasicYouTubeChannel, V extends BasicYouTubeVideo> extends AbstractChannel<T, YouTubeSource, V> {
     
     public static final String KEY_CHANNEL_ID = "id";
     public static final String KEY_NAME = "name";
@@ -52,8 +52,8 @@ public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, Yo
     }
     
     @Override
-    public List<BasicYouTubeVideo> getVideos() {
-        return BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByChannelIdViaInstance(getChannelId()));
+    public List<V> getVideos() {
+        return (List<V>) BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByChannelIdViaInstance(getChannelId()));
     }
     
     @Override
@@ -65,7 +65,7 @@ public class BasicYouTubeChannel extends AbstractChannel<BasicYouTubeChannel, Yo
     }
     
     @Override
-    public boolean hasVideo(BasicYouTubeVideo video) {
+    public boolean hasVideo(V video) {
         if (video == null) {
             return false;
         }

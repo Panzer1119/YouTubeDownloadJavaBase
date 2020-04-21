@@ -27,7 +27,7 @@ import de.codemakers.download.sources.impl.YouTubeSource;
 import java.time.Instant;
 import java.util.List;
 
-public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeSource, BasicYouTubePlaylist> {
+public class BasicYouTubeVideo<T extends BasicYouTubeVideo, P extends BasicYouTubePlaylist> extends AbstractVideo<T, YouTubeSource, P> {
     
     public static final String KEY_VIDEO_ID = "id";
     public static final String KEY_TIMESTAMP = "uploadDate";
@@ -72,18 +72,18 @@ public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeS
         return channelId;
     }
     
-    public BasicYouTubeVideo setChannelId(String channelId) {
+    public T setChannelId(String channelId) {
         this.channelId = channelId;
-        return this;
+        return (T) this;
     }
     
     public String getAltTitle() {
         return altTitle;
     }
     
-    public BasicYouTubeVideo setAltTitle(String altTitle) {
+    public T setAltTitle(String altTitle) {
         this.altTitle = altTitle;
-        return this;
+        return (T) this;
     }
     
     @Override
@@ -92,8 +92,8 @@ public class BasicYouTubeVideo extends AbstractVideo<BasicYouTubeVideo, YouTubeS
     }
     
     @Override
-    public List<BasicYouTubePlaylist> getPlaylists() {
-        return BasicYouTubePlaylist.ofJsonArray(YouTubeWebService.getPlaylistsByVideoIdViaInstance(getVideoId()));
+    public List<P> getPlaylists() {
+        return (List<P>) BasicYouTubePlaylist.ofJsonArray(YouTubeWebService.getPlaylistsByVideoIdViaInstance(getVideoId()));
     }
     
     @Override

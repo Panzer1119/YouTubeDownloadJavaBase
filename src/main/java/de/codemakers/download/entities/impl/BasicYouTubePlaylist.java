@@ -27,7 +27,7 @@ import de.codemakers.download.sources.impl.YouTubeSource;
 import java.time.Instant;
 import java.util.List;
 
-public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist, YouTubeSource, BasicYouTubeVideo> {
+public class BasicYouTubePlaylist<T extends BasicYouTubePlaylist, V extends BasicYouTubeVideo> extends AbstractPlaylist<T, YouTubeSource, V> {
     
     public static final String KEY_PLAYLIST_ID = "id";
     public static final String KEY_UPLOADER_ID = "uploaderId";
@@ -68,9 +68,9 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
         return playlist;
     }
     
-    public BasicYouTubePlaylist setPlaylist(String playlist) {
+    public T setPlaylist(String playlist) {
         this.playlist = playlist;
-        return this;
+        return (T) this;
     }
     
     @Override
@@ -84,8 +84,8 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
     }
     
     @Override
-    public List<BasicYouTubeVideo> getVideos() {
-        return BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByPlaylistIdViaInstance(getPlaylistId()));
+    public List<V> getVideos() {
+        return (List<V>) BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByPlaylistIdViaInstance(getPlaylistId()));
     }
     
     @Override
@@ -97,7 +97,7 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
     }
     
     @Override
-    public boolean containsVideo(BasicYouTubeVideo video) {
+    public boolean containsVideo(V video) {
         if (video == null) {
             return false;
         }
@@ -113,7 +113,7 @@ public class BasicYouTubePlaylist extends AbstractPlaylist<BasicYouTubePlaylist,
     }
     
     @Override
-    public int getIndex(BasicYouTubeVideo video) {
+    public int getIndex(V video) {
         if (video == null) {
             return -1;
         }

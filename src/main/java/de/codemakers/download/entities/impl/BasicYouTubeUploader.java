@@ -27,7 +27,7 @@ import de.codemakers.download.sources.impl.YouTubeSource;
 import java.time.Instant;
 import java.util.List;
 
-public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader, YouTubeSource, BasicYouTubeVideo, BasicYouTubePlaylist> {
+public class BasicYouTubeUploader<T extends BasicYouTubeUploader, V extends BasicYouTubeVideo, P extends BasicYouTubePlaylist> extends AbstractUploader<T, YouTubeSource, V, P> {
     
     public static final String KEY_UPLOADER_ID = "id";
     public static final String KEY_NAME = "name";
@@ -52,8 +52,8 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
     }
     
     @Override
-    public List<BasicYouTubeVideo> getUploadedVideos() {
-        return BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByUploaderIdViaInstance(getUploaderId()));
+    public List<V> getUploadedVideos() {
+        return (List<V>) BasicYouTubeVideo.ofJsonArray(YouTubeWebService.getVideosByUploaderIdViaInstance(getUploaderId()));
     }
     
     @Override
@@ -65,7 +65,7 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
     }
     
     @Override
-    public boolean hasVideoUploaded(BasicYouTubeVideo video) {
+    public boolean hasVideoUploaded(V video) {
         if (video == null) {
             return false;
         }
@@ -83,8 +83,8 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
     }
     
     @Override
-    public List<BasicYouTubePlaylist> getCreatedPlaylists() {
-        return BasicYouTubePlaylist.ofJsonArray(YouTubeWebService.getPlaylistsByUploaderIdViaInstance(getUploaderId()));
+    public List<P> getCreatedPlaylists() {
+        return (List<P>) BasicYouTubePlaylist.ofJsonArray(YouTubeWebService.getPlaylistsByUploaderIdViaInstance(getUploaderId()));
     }
     
     @Override
@@ -96,7 +96,7 @@ public class BasicYouTubeUploader extends AbstractUploader<BasicYouTubeUploader,
     }
     
     @Override
-    public boolean hasPlaylistCreated(BasicYouTubePlaylist playlist) {
+    public boolean hasPlaylistCreated(P playlist) {
         if (playlist == null) {
             return false;
         }
