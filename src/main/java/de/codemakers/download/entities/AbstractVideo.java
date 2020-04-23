@@ -42,6 +42,10 @@ public abstract class AbstractVideo<T extends AbstractVideo, S extends Source, P
         return getId();
     }
     
+    public T setVideoId(String videoId) {
+        return setId(videoId);
+    }
+    
     public String getUploaderId() {
         return uploaderId;
     }

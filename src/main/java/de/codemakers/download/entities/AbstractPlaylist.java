@@ -40,6 +40,10 @@ public abstract class AbstractPlaylist<T extends AbstractPlaylist, S extends Sou
         return getId();
     }
     
+    public T setPlaylistId(String playlistId) {
+        return setId(playlistId);
+    }
+    
     public String getUploaderId() {
         return uploaderId;
     }
