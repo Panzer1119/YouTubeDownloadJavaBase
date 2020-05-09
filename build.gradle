@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'de.codemakers.download'
-version 'v1.8.0_172-alpha.8'
+version 'v1.8.0_172-alpha.9'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.Panzer1119:CJP-Base:v1.8.0_172-alpha.50' //17.04.2020 15:40
+    implementation 'com.github.Panzer1119:CJP-Base:v1.8.0_172-alpha.52' //09.05.2020 17:45
     compile group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.25.1' //26.03.2020 00:13
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
