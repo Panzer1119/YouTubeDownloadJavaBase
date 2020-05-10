@@ -28,30 +28,30 @@ import java.util.stream.StreamSupport;
 
 public class YouTubeWebService extends WebService {
     
-    public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/byVideoId/%s";
-    public static final String TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s";
-    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getIds";
-    public static final String TEMPLATE_API_GET_VIDEOS_BY_CHANNEL_ID = "/videos/byChannelId/%s";
-    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_CHANNEL_ID = "/videos/byChannelId/%s/getIds";
-    public static final String TEMPLATE_API_GET_VIDEOS_BY_UPLOADER_ID = "/videos/byUploaderId/%s";
-    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getIds";
-    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getCount";
-    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_CHANNEL_ID = "/videos/byChannelId/%s/getCount";
-    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getCount";
-    public static final String TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID = "/playlists/byPlaylistId/%s";
-    public static final String TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID = "/playlists/byVideoId/%s";
-    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID = "/playlists/byVideoId/%s/getIds";
-    public static final String TEMPLATE_API_GET_PLAYLISTS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s";
-    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getIds";
-    public static final String TEMPLATE_API_GET_INDEX_BY_PLAYLIST_ID_AND_VIDEO_ID = "/playlists/byPlaylistId/%s/getIndex/%s";
-    public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_VIDEO_ID = "/playlists/byVideoId/%s/getCount";
-    public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getCount";
-    public static final String TEMPLATE_API_GET_PLAYLIST_ID_CONTAINS_VIDEO_ID = "/playlists/byPlaylistId/%s/containsVideo/%s";
-    public static final String TEMPLATE_API_GET_CHANNEL_BY_CHANNEL_ID = "/channels/byChannelId/%s";
-    public static final String TEMPLATE_API_GET_CHANNEL_ID_HAS_VIDEO_ID = "/channels/byChannelId/%s/hasVideo/%s";
-    public static final String TEMPLATE_API_GET_UPLOADER_BY_UPLOADER_ID = "/uploaders/byUploaderId/%s";
-    public static final String TEMPLATE_API_GET_UPLOADER_ID_UPLOADED_VIDEO_ID = "/uploaders/byUploaderId/%s/uploadedVideo/%s";
-    public static final String TEMPLATE_API_GET_UPLOADER_ID_CREATED_PLAYLIST_ID = "/uploaders/byUploaderId/%s/createdPlaylist/%s";
+    public static final String TEMPLATE_API_GET_VIDEO_BY_VIDEO_ID = "/videos/byVideoId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEOS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getIds"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEOS_BY_CHANNEL_ID = "/videos/byChannelId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_CHANNEL_ID = "/videos/byChannelId/%s/getIds"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEOS_BY_UPLOADER_ID = "/videos/byUploaderId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEO_IDS_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getIds"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_CHANNEL_ID = "/videos/byChannelId/%s/getCount"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_UPLOADER_ID = "/videos/byUploaderId/%s/getCount"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLIST_BY_PLAYLIST_ID = "/playlists/byPlaylistId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLISTS_BY_VIDEO_ID = "/playlists/byVideoId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_VIDEO_ID = "/playlists/byVideoId/%s/getIds"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLISTS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLIST_IDS_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getIds"; // Done // Tested
+    public static final String TEMPLATE_API_GET_INDEX_BY_PLAYLIST_ID_AND_VIDEO_ID = "/playlists/byPlaylistId/%s/getIndex/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_VIDEO_COUNT_BY_PLAYLIST_ID = "/videos/byPlaylistId/%s/getCount"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_VIDEO_ID = "/playlists/byVideoId/%s/getCount"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLIST_COUNT_BY_UPLOADER_ID = "/playlists/byUploaderId/%s/getCount"; // Done // Tested
+    public static final String TEMPLATE_API_GET_PLAYLIST_ID_CONTAINS_VIDEO_ID = "/playlists/byPlaylistId/%s/containsVideo/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_CHANNEL_BY_CHANNEL_ID = "/channels/byChannelId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_CHANNEL_ID_HAS_VIDEO_ID = "/channels/byChannelId/%s/hasVideo/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_UPLOADER_BY_UPLOADER_ID = "/uploaders/byUploaderId/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_UPLOADER_ID_UPLOADED_VIDEO_ID = "/uploaders/byUploaderId/%s/uploadedVideo/%s"; // Done // Tested
+    public static final String TEMPLATE_API_GET_UPLOADER_ID_CREATED_PLAYLIST_ID = "/uploaders/byUploaderId/%s/createdPlaylist/%s"; // Done // Tested
     
     private static YouTubeWebService WEB_SERVICE = null;
     
