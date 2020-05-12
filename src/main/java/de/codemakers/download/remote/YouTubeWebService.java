@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class YouTubeWebService extends WebService {
+public class YouTubeWebService extends WebService { //TODO //IMPORTANT Where are the methods, which converts the JSON Result from the WebService into Basic... Objects??? (And shouldn't the methods, which returning JsonElements, be not-public?)
     
     public static final String TEMPLATE_API_GET_VIDEOS_ALL = "/videos/all"; //Done
     public static final String TEMPLATE_API_GET_VIDEO_IDS_ALL = "/videos/all/getIds"; //Done
